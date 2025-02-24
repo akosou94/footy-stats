@@ -1,9 +1,15 @@
+import { StoreProvider } from "./store/react.tsx";
+import { MantineProvider } from "@mantine/core";
+import { Matches } from "./components/Matches";
+
 function App() {
 
 	return (
-		<>
-			<h1>Vite + React</h1>
-		</>
+		<MantineProvider>
+			<StoreProvider>
+				<Matches/>
+			</StoreProvider>
+		</MantineProvider>
 	)
 }
 
