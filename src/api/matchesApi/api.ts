@@ -1,10 +1,10 @@
 import { AxiosInstance } from "axios";
-import { Match } from "./types.ts";
+import { Match, MatchInfoByYear } from "./types.ts";
 
 
 export interface MatchesApi {
 	getMatches: () => Promise<{ matches: Match[] }>
-	getMatchesDataByYear: (code: string, year: string) => Promise<any>
+	getMatchesDataByYear: (code: string, year: string) => Promise<MatchInfoByYear>
 }
 
 export class AppMatchesApi implements MatchesApi {
