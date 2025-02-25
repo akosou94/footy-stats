@@ -1,34 +1,32 @@
 import { observer } from "mobx-react-lite";
-import { useMatchesStore } from "../../store/hooks.ts";
+import { useMatchesStore } from "../../store/hooks";
 import { useEffect, useState } from "react";
 import { List, SegmentedControl } from "@mantine/core";
 import styles from './Matches.module.scss'
-import { Team } from "../../api/matchesApi/types.ts";
+import { computed, reaction, toJS } from "mobx";
+import { options } from "./constants";
+import { LeagueStore } from "./LeagueStore";
+import { matchesInfo } from "./types";
 
-interface matchesInfo {
-	id?: number,
-	emblem: string,
-	matchDay?: number,
-	matches: Array<{
-		competition: {
-			name: string,
-			code: string,
-		},
-		homeTeam: Team,
-		awayTeam: Team,
-		id: number
-	}>
-}
-
-const options = [
-	{ label: "Premier League", value: "PL" },
-	{ label: "Championship", value: "ELC" },
-]
 
 export const Matches = observer(() => {
-	const [value, setValue] = useState('PL');
 	const store = useMatchesStore()
+	const [leagueStore] = useState(() => new LeagueStore())
+	const standings = computed(() => {
+		const total = store.matchesInfoByYear[leagueStore.league]
 
+		if (!total) {
+			return {}
+		}
+
+		return {
+			[total?.standings[0]?.type]: total?.standings[0]?.table,
+			[total?.standings[1]?.type]: total?.standings[1]?.table,
+			[total?.standings[2]?.type]: total?.standings[2]?.table
+		}
+	}).get()
+
+	// В глобальный стор в геттер/computed
 	const newLeagues = store?.matches.reduce((acc, match) => {
 		if (!acc[match.competition.code]) {
 			acc[match.competition.code] = {
@@ -56,32 +54,37 @@ export const Matches = observer(() => {
 		return acc;
 	}, {} as Record<string, matchesInfo>);
 
-	const total = store.matchesInfoByYear
-
-	console.log('total', total);
 
 	useEffect(() => {
 		store.loadMatches()
 	}, [])
 
 	useEffect(() => {
-		store.loadMatchesInfoByYear(value, '2024')
-	}, [value])
+		const disposer = reaction(() => leagueStore.league, (code) => store.loadMatchesInfoByCode(code), { fireImmediately: true })
+
+		return () => {
+			disposer()
+		}
+	}, [])
+
+
+	console.log('standings', standings);
+	console.log('mobx js', toJS(store.matchesInfoByYear));
 
 	return (
 		<div className={styles.Matches}>
 			<SegmentedControl
-				value={value}
-				onChange={setValue}
+				value={leagueStore.league}
+				onChange={leagueStore.setLeague}
 				radius='md'
 				data={options}
 			/>
 			<List className={styles.List}>
 				<div>
-					<img className={styles.List__EmblemImage} src={newLeagues[value]?.emblem} alt="Эмблема лиги"/>
-					<p className={styles.List__MatchDay}>{newLeagues[value]?.matchDay}-й тур</p>
+					<img className={styles.List__EmblemImage} src={newLeagues[leagueStore.league]?.emblem} alt="Эмблема лиги"/>
+					<p className={styles.List__MatchDay}>{newLeagues[leagueStore.league]?.matchDay}-й тур</p>
 				</div>
-				{newLeagues[value]?.matches?.map(({ id, homeTeam, awayTeam }) => {
+				{newLeagues[leagueStore.league]?.matches?.map(({ id, homeTeam, awayTeam }) => {
 					return <List.Item key={id}>
 						<div className={styles.List__TeamVsTeam}>
 							<div className={styles.List__Team}>

@@ -4,10 +4,12 @@ import { Match, MatchInfoByYear } from "./types.ts";
 
 export interface MatchesApi {
 	getMatches: () => Promise<{ matches: Match[] }>
-	getMatchesDataByYear: (code: string, year: string) => Promise<MatchInfoByYear>
+	getMatchesDataByYear: (code: string) => Promise<MatchInfoByYear>
 }
 
 export class AppMatchesApi implements MatchesApi {
+	season = '2024'
+
 	constructor(private httpService: AxiosInstance) {
 	}
 
@@ -15,10 +17,10 @@ export class AppMatchesApi implements MatchesApi {
 		return this.httpService.get('/v4/matches').then(r => r.data)
 	}
 
-	getMatchesDataByYear(code: string = 'PL', year: string) {
+	getMatchesDataByYear(code: string = 'PL',) {
 		return this.httpService.get(`/v4/competitions/${code}/standings`, {
 			params: {
-				season: year,
+				season: this.season
 			}
 		}).then(r => r.data)
 	}

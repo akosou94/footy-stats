@@ -5,26 +5,14 @@ import { Match, MatchInfoByYear } from "../api/matchesApi/types.ts";
 
 export class MatchesStore {
 	matches: Match[] = []
-	matchesInfoByYear: MatchInfoByYear = {
-		filters: {
-			season: ''
-		},
-		season: {
-			id: undefined!,
-			currentMatchday: 0,
-			endDate: '',
-			startDate: '',
-			winner: null!
-		},
-		standings: []
-	}
+	matchesInfoByYear: Record<string, MatchInfoByYear> = {}
 
 	constructor(private matchesApi: MatchesApi) {
 		makeObservable(this, {
 			matches: observable,
 			loadMatches: action,
 			matchesInfoByYear: observable,
-			loadMatchesInfoByYear: action
+			loadMatchesInfoByCode: action.bound,
 		})
 	}
 
@@ -36,10 +24,14 @@ export class MatchesStore {
 		})
 	}
 
-	loadMatchesInfoByYear(code: string, year: string) {
-		this.matchesApi.getMatchesDataByYear(code, year).then(r => {
+	loadMatchesInfoByCode(code: string) {
+		if (this.matchesInfoByYear[code]) {
+			return
+		}
+
+		this.matchesApi.getMatchesDataByYear(code).then(r => {
 			runInAction(() => {
-				this.matchesInfoByYear = r
+				this.matchesInfoByYear[code] = r
 			})
 		})
 	}
