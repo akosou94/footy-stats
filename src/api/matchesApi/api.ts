@@ -4,6 +4,7 @@ import { Match } from "./types.ts";
 
 export interface MatchesApi {
 	getMatches: () => Promise<{ matches: Match[] }>
+	getMatchesDataByYear: (code: string, year: string) => Promise<any>
 }
 
 export class AppMatchesApi implements MatchesApi {
@@ -12,6 +13,14 @@ export class AppMatchesApi implements MatchesApi {
 
 	getMatches() {
 		return this.httpService.get('/v4/matches').then(r => r.data)
+	}
+
+	getMatchesDataByYear(code: string = 'PL', year: string) {
+		return this.httpService.get(`/v4/competitions/${code}/standings`, {
+			params: {
+				season: year,
+			}
+		}).then(r => r.data)
 	}
 }
 

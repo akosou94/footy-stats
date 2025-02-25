@@ -56,10 +56,17 @@ export const Matches = observer(() => {
 		return acc;
 	}, {} as Record<string, matchesInfo>);
 
+	const total = store.matchesInfoByYear
+
+	console.log('total', total);
 
 	useEffect(() => {
 		store.loadMatches()
 	}, [])
+
+	useEffect(() => {
+		store.loadMatchesInfoByYear(value, '2024')
+	}, [value])
 
 	return (
 		<div className={styles.Matches}>

@@ -48,3 +48,44 @@ export interface Match {
 	status: string,
 	utcDate: string
 }
+
+export interface Team {
+	crest: string,
+	id: number,
+	name: string,
+	shortName: string,
+	tla: string
+}
+
+export interface TeamTable {
+	won: number,
+	draw: number,
+	form: string,
+	goalDifference: number,
+	goalsAgainst: number,
+	goalsFor: number,
+	lost: number,
+	playedGames: number,
+	points: number,
+	position: number,
+	team: Team
+}
+
+export interface Standings {
+	table: Array<TeamTable>
+	type: 'TOTAL' | 'HOME' | 'AWAY'
+}
+
+export interface MatchInfoByYear {
+	filters: {
+		season: string
+	},
+	season: {
+		currentMatchday: number,
+		startDate: string,
+		endDate: string,
+		id: number,
+		winner: string
+	},
+	standings: Array<Standings>
+}
