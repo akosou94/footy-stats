@@ -1,6 +1,7 @@
 import { StoreProvider } from "./store/react.tsx";
 import { MantineProvider } from "@mantine/core";
 import { Matches } from "./components/Matches";
+import '@mantine/core/styles.css';
 
 function App() {
 
