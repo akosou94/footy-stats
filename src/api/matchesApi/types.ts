@@ -57,7 +57,7 @@ export interface Team {
 	tla: string
 }
 
-export interface TeamTable {
+export interface TeamTableItem {
 	won: number,
 	draw: number,
 	form: string,
@@ -71,9 +71,11 @@ export interface TeamTable {
 	team: Team
 }
 
+export type StandingType = 'TOTAL' | 'HOME' | 'AWAY'
+
 export interface Standings {
-	table: Array<TeamTable>
-	type: 'TOTAL' | 'HOME' | 'AWAY'
+	table: Array<TeamTableItem>
+	type: StandingType
 }
 
 export interface MatchInfoByYear {

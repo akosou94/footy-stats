@@ -6,26 +6,40 @@ import styles from './Matches.module.scss'
 import { computed, reaction } from "mobx";
 import { options } from "./constants";
 import { LeagueStore } from "./LeagueStore";
+import { StandingType, TeamTableItem } from "../../api/matchesApi/types.ts";
 
 
 export const Matches = observer(() => {
 	const store = useMatchesStore()
 	const [leagueStore] = useState(() => new LeagueStore())
 	const league = store.matchesToday[leagueStore.league]
-	const matchesToday = store.matchesToday[leagueStore.league]?.matches
+	const matchesToday = league?.matches
 
 	const standings = computed(() => {
-		const total = store.matchesInfoByYear[leagueStore.league]
+		const league = store.matchesInfoByYear[leagueStore.league]
 
-		if (!total) {
+		if (!league) {
 			return {}
 		}
 
-		return {
-			[total?.standings[0]?.type]: total?.standings[0]?.table,
-			[total?.standings[1]?.type]: total?.standings[1]?.table,
-			[total?.standings[2]?.type]: total?.standings[2]?.table
-		}
+		const result = league.standings.reduce((acc, item) => {
+			item.table.forEach((tableItem) => {
+				const key = tableItem.team.id
+
+				if (!acc[key]) {
+					acc[key] = {} as Record<StandingType, TeamTableItem>
+				}
+
+				acc[key] = {
+					...acc[key],
+					[item.type]: tableItem
+				}
+			})
+
+			return acc
+		}, {} as Record<string, Record<StandingType, TeamTableItem>>)
+
+		return result
 	}).get()
 
 
@@ -41,11 +55,7 @@ export const Matches = observer(() => {
 		}
 	}, [])
 
-	console.log('league', league);
-	console.log('matchesToday', matchesToday);
 	console.log('standings', standings);
-	// console.log('mobx js', toJS(store.matchesInfoByYear));
-
 
 	return (
 		<div className={styles.Matches}>
@@ -66,7 +76,9 @@ export const Matches = observer(() => {
 					</div>
 				)
 				}
-				{matchesToday?.map(({ id, homeTeam, awayTeam }) => {
+				{matchesToday?.map((match) => {
+					const { id, homeTeam, awayTeam } = match
+
 					return <List.Item key={id}>
 						<div className={styles.List__TeamVsTeam}>
 							<div className={styles.List__Team}>

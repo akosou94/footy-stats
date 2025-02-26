@@ -35,8 +35,8 @@ export class MatchesStore {
 					name: match.competition.name,
 					code: match.competition.code,
 				},
-				homeTeam: { ...match.homeTeam },
-				awayTeam: { ...match.awayTeam },
+				homeTeam: match.homeTeam,
+				awayTeam: match.awayTeam,
 				id: match.id,
 			});
 
