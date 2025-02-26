@@ -3,15 +3,17 @@ import { useMatchesStore } from "../../store/hooks";
 import { useEffect, useState } from "react";
 import { List, SegmentedControl } from "@mantine/core";
 import styles from './Matches.module.scss'
-import { computed, reaction, toJS } from "mobx";
+import { computed, reaction } from "mobx";
 import { options } from "./constants";
 import { LeagueStore } from "./LeagueStore";
-import { matchesInfo } from "./types";
 
 
 export const Matches = observer(() => {
 	const store = useMatchesStore()
 	const [leagueStore] = useState(() => new LeagueStore())
+	const league = store.matchesToday[leagueStore.league]
+	const matchesToday = store.matchesToday[leagueStore.league]?.matches
+
 	const standings = computed(() => {
 		const total = store.matchesInfoByYear[leagueStore.league]
 
@@ -26,34 +28,6 @@ export const Matches = observer(() => {
 		}
 	}).get()
 
-	// В глобальный стор в геттер/computed
-	const newLeagues = store?.matches.reduce((acc, match) => {
-		if (!acc[match.competition.code]) {
-			acc[match.competition.code] = {
-				id: undefined,
-				emblem: '',
-				matchDay: undefined,
-				matches: []
-			};
-		}
-
-		acc[match.competition.code].emblem = match.competition.emblem
-		acc[match.competition.code].matches.push({
-			competition: {
-				name: match.competition.name,
-				code: match.competition.code,
-			},
-			homeTeam: { ...match.homeTeam },
-			awayTeam: { ...match.awayTeam },
-			id: match.id,
-
-		});
-		acc[match.competition.code].matchDay = match.matchday
-
-
-		return acc;
-	}, {} as Record<string, matchesInfo>);
-
 
 	useEffect(() => {
 		store.loadMatches()
@@ -67,9 +41,11 @@ export const Matches = observer(() => {
 		}
 	}, [])
 
-
+	console.log('league', league);
+	console.log('matchesToday', matchesToday);
 	console.log('standings', standings);
-	console.log('mobx js', toJS(store.matchesInfoByYear));
+	// console.log('mobx js', toJS(store.matchesInfoByYear));
+
 
 	return (
 		<div className={styles.Matches}>
@@ -80,11 +56,17 @@ export const Matches = observer(() => {
 				data={options}
 			/>
 			<List className={styles.List}>
-				<div>
-					<img className={styles.List__EmblemImage} src={newLeagues[leagueStore.league]?.emblem} alt="Эмблема лиги"/>
-					<p className={styles.List__MatchDay}>{newLeagues[leagueStore.league]?.matchDay}-й тур</p>
-				</div>
-				{newLeagues[leagueStore.league]?.matches?.map(({ id, homeTeam, awayTeam }) => {
+				{!matchesToday ? (
+					<p>На сегодня нет матчей в лиге</p>
+				) : (
+					<div>
+						<img className={styles.List__EmblemImage} src={league?.emblem}
+								 alt="Эмблема лиги"/>
+						<p className={styles.List__MatchDay}>{league?.matchDay}-й тур</p>
+					</div>
+				)
+				}
+				{matchesToday?.map(({ id, homeTeam, awayTeam }) => {
 					return <List.Item key={id}>
 						<div className={styles.List__TeamVsTeam}>
 							<div className={styles.List__Team}>

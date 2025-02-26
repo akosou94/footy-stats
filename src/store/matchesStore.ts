@@ -1,6 +1,7 @@
-import { action, makeObservable, observable, runInAction } from "mobx";
+import { action, computed, makeObservable, observable, runInAction } from "mobx";
 import { MatchesApi } from "../api/matchesApi";
 import { Match, MatchInfoByYear } from "../api/matchesApi/types.ts";
+import { matchesInfo } from "../components/Matches/types.ts";
 
 
 export class MatchesStore {
@@ -13,7 +14,34 @@ export class MatchesStore {
 			loadMatches: action,
 			matchesInfoByYear: observable,
 			loadMatchesInfoByCode: action.bound,
+			matchesToday: computed
 		})
+	}
+
+	get matchesToday(): Record<string, matchesInfo> {
+		return this.matches.reduce((acc, match) => {
+
+			if (!acc[match.competition.code]) {
+				acc[match.competition.code] = {
+					emblem: match.competition.emblem,
+					matchDay: match.matchday,
+					matches: [],
+					competition: match.competition,
+				};
+			}
+
+			acc[match.competition.code].matches.push({
+				competition: {
+					name: match.competition.name,
+					code: match.competition.code,
+				},
+				homeTeam: { ...match.homeTeam },
+				awayTeam: { ...match.awayTeam },
+				id: match.id,
+			});
+
+			return acc;
+		}, {} as Record<string, matchesInfo>);
 	}
 
 	loadMatches() {

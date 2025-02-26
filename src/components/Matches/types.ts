@@ -13,4 +13,11 @@ export interface matchesInfo {
 		awayTeam: Team,
 		id: number
 	}>
+	competition: {
+		code: string,
+		emblem: string,
+		id: number,
+		name: string,
+		type: string,
+	}
 }
