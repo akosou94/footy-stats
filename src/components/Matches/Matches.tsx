@@ -1,12 +1,13 @@
 import { observer } from "mobx-react-lite";
 import { useMatchesStore } from "../../store/hooks";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { List, SegmentedControl } from "@mantine/core";
 import styles from './Matches.module.scss'
 import { computed, reaction } from "mobx";
 import { options } from "./constants";
 import { LeagueStore } from "./LeagueStore";
 import { StandingType, TeamTableItem } from "../../api/matchesApi/types.ts";
+import { getAverageStatistics } from "./utils/statistics.ts";
 
 
 export const Matches = observer(() => {
@@ -42,6 +43,13 @@ export const Matches = observer(() => {
 		return result
 	}).get()
 
+	const averageStatistics = useMemo(() => {
+		return getAverageStatistics(standings)
+	}, [league])
+
+	console.group();
+	console.log('averageStatistics', averageStatistics);
+	console.groupEnd();
 
 	useEffect(() => {
 		store.loadMatches()
@@ -54,8 +62,6 @@ export const Matches = observer(() => {
 			disposer()
 		}
 	}, [])
-
-	console.log('standings', standings);
 
 	return (
 		<div className={styles.Matches}>

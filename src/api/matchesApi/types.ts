@@ -71,6 +71,17 @@ export interface TeamTableItem {
 	team: Team
 }
 
+export interface TeamTableStatistics {
+	goalsForHome: number,
+	goalsForAway: number,
+	leagueGoalsHome: number,
+	missedGoalsAgainstHome: number,
+	missedGoalsAgainstAway: number,
+	missedGoalsAgainst: number,
+	powerAttack: number,
+	powerDefence: number
+}
+
 export type StandingType = 'TOTAL' | 'HOME' | 'AWAY'
 
 export interface Standings {
