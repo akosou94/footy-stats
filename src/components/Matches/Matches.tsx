@@ -1,14 +1,13 @@
 import { observer } from "mobx-react-lite";
 import { useMatchesStore } from "../../store/hooks";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { List, SegmentedControl } from "@mantine/core";
 import styles from './Matches.module.scss'
 import { computed, reaction } from "mobx";
 import { options } from "./constants";
 import { LeagueStore } from "./LeagueStore";
 import { StandingType, TeamTableItem } from "../../api/matchesApi/types.ts";
-import { getAverageStatistics } from "./utils/statistics.ts";
-
+import { getAverageStatistics, mappedLabels } from "./utils/statistics.ts";
 
 export const Matches = observer(() => {
 	const store = useMatchesStore()
@@ -43,11 +42,12 @@ export const Matches = observer(() => {
 		return result
 	}).get()
 
-	const averageStatistics = useMemo(() => {
+	const averageStatistics = computed(() => {
 		return getAverageStatistics(standings)
-	}, [league])
+	}).get()
 
 	console.group();
+	console.log('standings', standings);
 	console.log('averageStatistics', averageStatistics);
 	console.groupEnd();
 
@@ -90,10 +90,20 @@ export const Matches = observer(() => {
 							<div className={styles.List__Team}>
 								<img className={styles.List__TeamImage} src={homeTeam.crest} alt="Эмблема клуба хозяев"/>
 								<p>{homeTeam.shortName}</p>
+								<ul>
+									{Object.entries(averageStatistics[homeTeam.id]).map(([key, value]) => (
+										<li key={key}>{mappedLabels[key]} - {value}</li>
+									))}
+								</ul>
 							</div>
 							<div className={styles.List__Team}>
 								<img className={styles.List__TeamImage} src={awayTeam.crest} alt="Эмблема клуба гостей"/>
 								<p>{awayTeam.shortName}</p>
+								<ul>
+									{Object.entries(averageStatistics[awayTeam.id]).map(([key, value]) => (
+										<li key={key}>{mappedLabels[key]} - {value}</li>
+									))}
+								</ul>
 							</div>
 						</div>
 					</List.Item>
