@@ -8,6 +8,7 @@ import { options } from "./constants";
 import { LeagueStore } from "./LeagueStore";
 import { StandingType, TeamTableItem } from "../../api/matchesApi/types.ts";
 import { getAverageStatistics, mappedLabels } from "./utils/statistics.ts";
+import { getProbabilities, ratingAttackTeam } from "./utils/calculate.ts";
 
 export const Matches = observer(() => {
 	const store = useMatchesStore()
@@ -91,6 +92,15 @@ export const Matches = observer(() => {
 								<img className={styles.List__TeamImage} src={homeTeam.crest} alt="Эмблема клуба хозяев"/>
 								<p>{homeTeam.shortName}</p>
 								<ul>
+									<div>
+										<p>Вероятность забитых голов:</p>
+										{getProbabilities(ratingAttackTeam(averageStatistics[homeTeam.id].powerAttack, averageStatistics[awayTeam.id].powerDefenceAway, averageStatistics[homeTeam.id].leagueGoalsHome)).map((item, index) => (
+											<p>{index + 1} - {item}%</p>
+										))}
+									</div>
+									<p>Рейтинг атаки
+										хозяев
+										- {ratingAttackTeam(averageStatistics[homeTeam.id].powerAttack, averageStatistics[awayTeam.id].powerDefenceAway, averageStatistics[homeTeam.id].leagueGoalsHome)}</p>
 									{Object.entries(averageStatistics[homeTeam.id]).map(([key, value]) => (
 										<li key={key}>{mappedLabels[key]} - {value}</li>
 									))}
@@ -100,6 +110,15 @@ export const Matches = observer(() => {
 								<img className={styles.List__TeamImage} src={awayTeam.crest} alt="Эмблема клуба гостей"/>
 								<p>{awayTeam.shortName}</p>
 								<ul>
+									<div>
+										<p>Вероятность забитых голов:</p>
+										{getProbabilities(ratingAttackTeam(averageStatistics[homeTeam.id].powerDefence, averageStatistics[awayTeam.id].powerAttackAway, averageStatistics[awayTeam.id].leagueGoalsHome)).map((item, index) => (
+											<p>{index + 1} - {item}%</p>
+										))}
+									</div>
+									<p>Рейтинг атаки
+										гостей
+										- {ratingAttackTeam(averageStatistics[homeTeam.id].powerDefence, averageStatistics[awayTeam.id].powerAttackAway, averageStatistics[awayTeam.id].leagueGoalsHome)}</p>
 									{Object.entries(averageStatistics[awayTeam.id]).map(([key, value]) => (
 										<li key={key}>{mappedLabels[key]} - {value}</li>
 									))}

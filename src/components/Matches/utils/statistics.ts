@@ -24,7 +24,8 @@ export const getStatistic = (teamStanding: Record<StandingType, TeamTableItem>) 
 	const missedGoalsAgainst = avg(teamStanding?.HOME?.goalsAgainst + teamStanding.AWAY?.goalsAgainst, teamStanding?.TOTAL?.playedGames)
 	const powerAttack = Number((Number(goalsForHome) / Number(leagueGoalsHome)).toFixed(2))
 	const powerDefence = Number((Number(missedGoalsAgainstHome) / Number(missedGoalsAgainst)).toFixed(2))
-
+	const powerAttackAway = Number((Number(goalsForAway / Number(leagueGoalsHome)).toFixed(2)))
+	const powerDefenceAway = Number((Number(missedGoalsAgainstAway) / Number(missedGoalsAgainst)).toFixed(2))
 
 	return {
 		playedGames,
@@ -36,7 +37,9 @@ export const getStatistic = (teamStanding: Record<StandingType, TeamTableItem>) 
 		missedGoalsAgainstAway,
 		missedGoalsAgainst,
 		powerAttack,
-		powerDefence
+		powerDefence,
+		powerAttackAway,
+		powerDefenceAway
 	}
 }
 
@@ -49,8 +52,10 @@ export const mappedLabels: Record<string, string> = {
 	'missedGoalsAgainstHome': 'Среднее пропущенных дома',
 	'missedGoalsAgainstAway': 'Среднее пропущенных в гостях',
 	'missedGoalsAgainst': 'Среднее пропущенных в лиге',
-	'powerAttack': 'Сила атаки',
-	'powerDefence': 'Сила обороны',
+	'powerAttack': 'Сила атаки дома',
+	'powerDefence': 'Сила обороны дома',
+	'powerAttackAway': 'Сила атаки в гостях',
+	'powerDefenceAway': 'Сила обороны в гостях',
 	'ratingAttackTeam': 'Рейтинг Атаки Хозяев',
 	'ratingAttackTeamAway': 'Рейтинг Атаки Гостей'
 }

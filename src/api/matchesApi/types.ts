@@ -79,7 +79,9 @@ export interface TeamTableStatistics {
 	missedGoalsAgainstAway: number,
 	missedGoalsAgainst: number,
 	powerAttack: number,
-	powerDefence: number
+	powerAttackAway: number,
+	powerDefence: number,
+	powerDefenceAway: number
 }
 
 export type StandingType = 'TOTAL' | 'HOME' | 'AWAY'
