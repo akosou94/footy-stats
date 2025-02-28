@@ -3,75 +3,39 @@ import { useMatchesStore } from "../../store/hooks";
 import { useEffect, useState } from "react";
 import { List, SegmentedControl } from "@mantine/core";
 import styles from "./Matches.module.scss";
-import { computed, reaction } from "mobx";
+import { reaction } from "mobx";
 import { options } from "./constants";
 import { LeagueStore } from "./LeagueStore";
-import { StandingType, TeamTableItem } from "../../api/matchesApi/types.ts";
-import { getAverageStatistics, mappedLabels } from "./utils/statistics.ts";
+import { mappedLabels } from "./utils/statistics.ts";
 import { getProbabilities, ratingAttackTeam } from "./utils/calculate.ts";
 import { DatePicker } from "@mantine/dates";
 
 export const Matches = observer(() => {
   const store = useMatchesStore();
-  const [leagueStore] = useState(() => new LeagueStore());
-  const league = store.matchesToday[leagueStore.league];
-  const matchesToday = league?.matches;
-
-  // Вынести дату в стор
-  const [value, setValue] = useState<[Date | null, Date | null]>([null, null]);
-
-  const standings = computed(() => {
-    const league = store.matchesInfoByYear[leagueStore.league];
-
-    if (!league) {
-      return {};
-    }
-
-    const result = league.standings.reduce(
-      (acc, item) => {
-        item.table.forEach((tableItem) => {
-          const key = tableItem.team.id;
-
-          if (!acc[key]) {
-            acc[key] = {} as Record<StandingType, TeamTableItem>;
-          }
-
-          acc[key] = {
-            ...acc[key],
-            [item.type]: tableItem,
-          };
-        });
-
-        return acc;
-      },
-      {} as Record<string, Record<StandingType, TeamTableItem>>,
-    );
-
-    return result;
-  }).get();
-
-  const averageStatistics = computed(() => {
-    return getAverageStatistics(standings);
-  }).get();
-
-  console.group();
-  console.log("standings", standings);
-  console.log("averageStatistics", averageStatistics);
-  console.groupEnd();
+  const [leagueStore] = useState(() => new LeagueStore(store));
+  const matchesToday = leagueStore.matchesToday;
+  const league = leagueStore.leagueInfo;
+  const averageStatistics = leagueStore.averageStatistics;
 
   useEffect(() => {
-    store.loadMatches(value);
-  }, [value]);
-
-  useEffect(() => {
-    const disposer = reaction(
+    const disposerLeague = reaction(
       () => leagueStore.league,
       (code) => store.loadMatchesInfoByCode(code),
       { fireImmediately: true },
     );
 
+    const disposerDates = reaction(
+      () => [leagueStore.dateFrom, leagueStore.dateTo],
+      () => {
+        if (leagueStore.dateFrom && leagueStore.dateTo)
+          store.loadMatches([leagueStore.dateFrom, leagueStore.dateTo]);
+      },
+      { fireImmediately: true },
+    );
+
     return () => {
-      disposer();
+      disposerLeague();
+      disposerDates();
     };
   }, []);
 
@@ -84,7 +48,11 @@ export const Matches = observer(() => {
           radius="md"
           data={options}
         />
-        <DatePicker type="range" value={value} onChange={setValue} />
+        <DatePicker
+          type="range"
+          value={[leagueStore.dateFrom, leagueStore.dateTo]}
+          onChange={leagueStore.setDates}
+        />
       </div>
       <List className={styles.List}>
         {!matchesToday ? (
