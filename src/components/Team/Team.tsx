@@ -7,20 +7,29 @@ import {
 import { mappedLabels } from "../Matches/utils/statistics.ts";
 import { TeamTableStatistics } from "../../api/matchesApi/types.ts";
 import { FC } from "react";
+import { Team as TeamType } from "../../api/matchesApi/types.ts";
 
 interface TeamProps {
-  matchesToday: any;
-  isReadyAverageStatistics: boolean;
-  averageStatistics: Record<string, Partial<TeamTableStatistics>>;
+  matches:{
+    competition: {
+        name: string;
+        code: string;
+    };
+    homeTeam: TeamType;
+    awayTeam: TeamType;
+    id: number;
+}[] ;
+  isReady: boolean;
+  statistics: Record<string, Partial<TeamTableStatistics>>;
 }
 
 const Team: FC<TeamProps> = (props) => {
-  const { matchesToday, isReadyAverageStatistics, averageStatistics } = props;
+  const { matches, isReady, statistics } = props;
 
   return (
     <>
-      {isReadyAverageStatistics &&
-        matchesToday?.map((match) => {
+      {isReady &&
+        matches?.map((match) => {
           const { id, homeTeam, awayTeam } = match;
 
           return (
@@ -40,9 +49,9 @@ const Team: FC<TeamProps> = (props) => {
                     <h4>Вероятность забитых голов:</h4>
                     {getProbabilities(
                       ratingAttackTeam(
-                        averageStatistics[homeTeam.id].powerAttack,
-                        averageStatistics[awayTeam.id].powerDefenceAway,
-                        averageStatistics[homeTeam.id].leagueGoalsHome,
+                        statistics[homeTeam.id].powerAttack,
+                        statistics[awayTeam.id].powerDefenceAway,
+                        statistics[homeTeam.id].leagueGoalsHome,
                       ),
                     ).map((item, index) => (
                       <p className={styles.List__ItemText}>
@@ -53,7 +62,7 @@ const Team: FC<TeamProps> = (props) => {
                   <div>
                     <h4>Статистика команды:</h4>
                     <ul>
-                      {Object.entries(averageStatistics[homeTeam.id]).map(
+                      {Object.entries(statistics[homeTeam.id]).map(
                         ([key, value]) => (
                           <li key={key} className={styles.List__ItemText}>
                             {mappedLabels[key]} - {value}
@@ -64,9 +73,9 @@ const Team: FC<TeamProps> = (props) => {
                     <p className={styles.List__ItemText}>
                       Рейтинг атаки -{" "}
                       {ratingAttackTeam(
-                        averageStatistics[homeTeam.id].powerAttack,
-                        averageStatistics[awayTeam.id].powerDefenceAway,
-                        averageStatistics[homeTeam.id].leagueGoalsHome,
+                        statistics[homeTeam.id].powerAttack,
+                        statistics[awayTeam.id].powerDefenceAway,
+                        statistics[homeTeam.id].leagueGoalsHome,
                       )}
                     </p>
                   </div>
@@ -85,9 +94,9 @@ const Team: FC<TeamProps> = (props) => {
                     <h4>Вероятность забитых голов:</h4>
                     {getProbabilities(
                       ratingAttackTeam(
-                        averageStatistics[homeTeam.id].powerDefence,
-                        averageStatistics[awayTeam.id].powerAttackAway,
-                        averageStatistics[awayTeam.id].leagueGoalsHome,
+                        statistics[homeTeam.id].powerDefence,
+                        statistics[awayTeam.id].powerAttackAway,
+                        statistics[awayTeam.id].leagueGoalsHome,
                       ),
                     ).map((item, index) => (
                       <p className={styles.List__ItemText}>
@@ -98,7 +107,7 @@ const Team: FC<TeamProps> = (props) => {
                   <div>
                     <h4>Статистика команды:</h4>
                     <ul>
-                      {Object.entries(averageStatistics[awayTeam.id]).map(
+                      {Object.entries(statistics[awayTeam.id]).map(
                         ([key, value]) => (
                           <li key={key} className={styles.List__ItemText}>
                             {mappedLabels[key]} - {value}
@@ -109,9 +118,9 @@ const Team: FC<TeamProps> = (props) => {
                     <p className={styles.List__ItemText}>
                       Рейтинг атаки -{" "}
                       {ratingAttackTeam(
-                        averageStatistics[homeTeam.id].powerDefence,
-                        averageStatistics[awayTeam.id].powerAttackAway,
-                        averageStatistics[awayTeam.id].leagueGoalsHome,
+                        statistics[homeTeam.id].powerDefence,
+                        statistics[awayTeam.id].powerAttackAway,
+                        statistics[awayTeam.id].leagueGoalsHome,
                       )}
                     </p>
                   </div>

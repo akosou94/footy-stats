@@ -72,9 +72,9 @@ export const Matches = observer(() => {
           <Loader color="var(--ui-color-red)" />
         ) : (
           <Team
-            matchesToday={matchesToday}
-            isReadyAverageStatistics={isReadyAverageStatistics}
-            averageStatistics={averageStatistics}
+            matches={matchesToday}
+            isReady={isReadyAverageStatistics}
+            statistics={averageStatistics}
           />
         )}
       </List>
