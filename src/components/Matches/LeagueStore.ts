@@ -28,6 +28,7 @@ export class LeagueStore {
       matchesToday: computed,
       standings: computed,
       averageStatistics: computed,
+      isReadyAverageStatistics: computed,
     });
   }
 
@@ -71,5 +72,9 @@ export class LeagueStore {
 
   get averageStatistics() {
     return getAverageStatistics(this.standings);
+  }
+
+  get isReadyAverageStatistics() {
+    return Boolean(Object.keys(this.averageStatistics).length);
   }
 }

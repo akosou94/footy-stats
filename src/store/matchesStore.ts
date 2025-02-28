@@ -12,10 +12,12 @@ import { matchesInfo } from "../components/Matches/types.ts";
 export class MatchesStore {
   matches: Match[] = [];
   matchesInfoByYear: Record<string, MatchInfoByYear> = {};
+  isLoadingMatches = false;
 
   constructor(private matchesApi: MatchesApi) {
     makeObservable(this, {
       matches: observable,
+      isLoadingMatches: observable,
       loadMatches: action,
       matchesInfoByYear: observable,
       loadMatchesInfoByCode: action.bound,
@@ -52,11 +54,19 @@ export class MatchesStore {
   }
 
   loadMatches(value) {
-    this.matchesApi.getMatches(value).then((r) => {
-      runInAction(() => {
-        this.matches = r.matches;
+    this.isLoadingMatches = true;
+    this.matchesApi
+      .getMatches(value)
+      .then((r) => {
+        runInAction(() => {
+          this.matches = r.matches;
+        });
+      })
+      .finally(() => {
+        runInAction(() => {
+          this.isLoadingMatches = false;
+        });
       });
-    });
   }
 
   loadMatchesInfoByCode(code: string) {
