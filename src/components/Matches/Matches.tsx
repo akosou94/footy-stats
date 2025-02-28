@@ -77,7 +77,7 @@ export const Matches = observer(() => {
 
   return (
     <div className={styles.Matches}>
-      <div>
+      <div className={styles.Filters}>
         <SegmentedControl
           value={leagueStore.league}
           onChange={leagueStore.setLeague}
@@ -96,7 +96,7 @@ export const Matches = observer(() => {
               src={league?.emblem}
               alt="Эмблема лиги"
             />
-            <p className={styles.List__MatchDay}>{league?.matchDay}-й тур</p>
+            <h2 className={styles.List__MatchDay}>{league?.matchDay}-й тур</h2>
           </div>
         )}
         {matchesToday?.map((match) => {
@@ -106,82 +106,94 @@ export const Matches = observer(() => {
             <List.Item key={id}>
               <div className={styles.List__TeamVsTeam}>
                 <div className={styles.List__Team}>
-                  <img
-                    className={styles.List__TeamImage}
-                    src={homeTeam.crest}
-                    alt="Эмблема клуба хозяев"
-                  />
-                  <p>{homeTeam.shortName}</p>
-                  <ul>
-                    <div>
-                      <p>Вероятность забитых голов:</p>
-                      {getProbabilities(
-                        ratingAttackTeam(
-                          averageStatistics[homeTeam.id].powerAttack,
-                          averageStatistics[awayTeam.id].powerDefenceAway,
-                          averageStatistics[homeTeam.id].leagueGoalsHome,
+                  <div className={styles.Title}>
+                    <h3>Хозяева</h3>
+                    <img
+                      className={styles.List__TeamImage}
+                      src={homeTeam.crest}
+                      alt="Эмблема клуба хозяев"
+                    />
+                    <p>{homeTeam.shortName}</p>
+                  </div>
+                  <div>
+                    <h4>Вероятность забитых голов:</h4>
+                    {getProbabilities(
+                      ratingAttackTeam(
+                        averageStatistics[homeTeam.id].powerAttack,
+                        averageStatistics[awayTeam.id].powerDefenceAway,
+                        averageStatistics[homeTeam.id].leagueGoalsHome,
+                      ),
+                    ).map((item, index) => (
+                      <p className={styles.List__ItemText}>
+                        {index} - {item}%
+                      </p>
+                    ))}
+                  </div>
+                  <div>
+                    <h4>Статистика команды:</h4>
+                    <ul>
+                      {Object.entries(averageStatistics[homeTeam.id]).map(
+                        ([key, value]) => (
+                          <li key={key} className={styles.List__ItemText}>
+                            {mappedLabels[key]} - {value}
+                          </li>
                         ),
-                      ).map((item, index) => (
-                        <p>
-                          {index + 1} - {item}%
-                        </p>
-                      ))}
-                    </div>
-                    <p>
-                      Рейтинг атаки хозяев -{" "}
+                      )}
+                    </ul>
+                    <p className={styles.List__ItemText}>
+                      Рейтинг атаки -{" "}
                       {ratingAttackTeam(
                         averageStatistics[homeTeam.id].powerAttack,
                         averageStatistics[awayTeam.id].powerDefenceAway,
                         averageStatistics[homeTeam.id].leagueGoalsHome,
                       )}
                     </p>
-                    {Object.entries(averageStatistics[homeTeam.id]).map(
-                      ([key, value]) => (
-                        <li key={key}>
-                          {mappedLabels[key]} - {value}
-                        </li>
-                      ),
-                    )}
-                  </ul>
+                  </div>
                 </div>
                 <div className={styles.List__Team}>
-                  <img
-                    className={styles.List__TeamImage}
-                    src={awayTeam.crest}
-                    alt="Эмблема клуба гостей"
-                  />
-                  <p>{awayTeam.shortName}</p>
-                  <ul>
-                    <div>
-                      <p>Вероятность забитых голов:</p>
-                      {getProbabilities(
-                        ratingAttackTeam(
-                          averageStatistics[homeTeam.id].powerDefence,
-                          averageStatistics[awayTeam.id].powerAttackAway,
-                          averageStatistics[awayTeam.id].leagueGoalsHome,
+                  <div className={styles.Title}>
+                    <h3>Гости</h3>
+                    <img
+                      className={styles.List__TeamImage}
+                      src={awayTeam.crest}
+                      alt="Эмблема клуба гостей"
+                    />
+                    <p>{awayTeam.shortName}</p>
+                  </div>
+                  <div>
+                    <h4>Вероятность забитых голов:</h4>
+                    {getProbabilities(
+                      ratingAttackTeam(
+                        averageStatistics[homeTeam.id].powerDefence,
+                        averageStatistics[awayTeam.id].powerAttackAway,
+                        averageStatistics[awayTeam.id].leagueGoalsHome,
+                      ),
+                    ).map((item, index) => (
+                      <p className={styles.List__ItemText}>
+                        {index} - {item}%
+                      </p>
+                    ))}
+                  </div>
+                  <div>
+                    <h4>Статистика команды:</h4>
+                    <ul>
+                      {Object.entries(averageStatistics[awayTeam.id]).map(
+                        ([key, value]) => (
+                          <li key={key} className={styles.List__ItemText}>
+                            {mappedLabels[key]} - {value}
+                          </li>
                         ),
-                      ).map((item, index) => (
-                        <p>
-                          {index + 1} - {item}%
-                        </p>
-                      ))}
-                    </div>
-                    <p>
-                      Рейтинг атаки гостей -{" "}
+                      )}
+                    </ul>
+                    <p className={styles.List__ItemText}>
+                      Рейтинг атаки -{" "}
                       {ratingAttackTeam(
                         averageStatistics[homeTeam.id].powerDefence,
                         averageStatistics[awayTeam.id].powerAttackAway,
                         averageStatistics[awayTeam.id].leagueGoalsHome,
                       )}
                     </p>
-                    {Object.entries(averageStatistics[awayTeam.id]).map(
-                      ([key, value]) => (
-                        <li key={key}>
-                          {mappedLabels[key]} - {value}
-                        </li>
-                      ),
-                    )}
-                  </ul>
+                  </div>
                 </div>
               </div>
             </List.Item>

@@ -1,5 +1,5 @@
 @forward "variables";
-@forward 'mixins';
+@forward "mixins";
 
 * {
   box-sizing: border-box;
@@ -14,7 +14,7 @@ body {
 }
 
 body {
-  font-family: var(--wix_Madefor), sans-serif;
+  font-family: var(--wix_Madefor), sans-serif !important;
   background: var(--background);
   color: var(--foreground);
 }
@@ -27,7 +27,6 @@ a {
 li {
   list-style-type: none;
 }
-
 
 @media (prefers-color-scheme: dark) {
   html {

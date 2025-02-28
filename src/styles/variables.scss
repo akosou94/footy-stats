@@ -1,12 +1,14 @@
 @media (prefers-color-scheme: dark) {
   :root {
-    --wix_Madefor: 'Wix Madefor Display';
+    --wix_Madefor: "Wix Madefor Display";
     --foreground: #ededed;
     --background: #001728;
 
     --ui-color-bg: #00111e;
     --ui-color-bg-hover: #002a4b;
     --ui-color-white: #083e68;
+    --ui-color-red: #c81d3a;
+    --ui-color-blue: #00111e;
 
     //Header
     --ui-color-header-bg: #c81d3a;
