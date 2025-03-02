@@ -1,9 +1,9 @@
 import { StoreProvider } from "./store/react.tsx";
-import { MantineProvider } from "@mantine/core";
 import { Matches } from "./components/Matches";
+import { BrowserRouter, Route, Routes } from "react-router";
+import { ThemeProvider } from "./providers/ThemeProvider";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
-import { BrowserRouter, Route, Routes } from "react-router";
 
 const SignIn = () => {
   return <div>SignIn</div>;
@@ -12,14 +12,14 @@ const SignIn = () => {
 function App() {
   return (
     <BrowserRouter>
-      <MantineProvider>
+      <ThemeProvider>
         <StoreProvider>
           <Routes>
             <Route path="/" element={<Matches />} />
             <Route path="/signin" element={<SignIn />} />
           </Routes>
         </StoreProvider>
-      </MantineProvider>
+      </ThemeProvider>
     </BrowserRouter>
   );
 }

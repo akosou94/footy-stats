@@ -7,7 +7,7 @@ import { reaction } from "mobx";
 import { options } from "./constants";
 import { LeagueStore } from "./LeagueStore";
 import { DatePicker } from "@mantine/dates";
-import Team from "../Team/Team.tsx";
+import MatchesToday from "../MatchesToday/MatchesToday.tsx";
 
 export const Matches = observer(() => {
   const store = useMatchesStore();
@@ -59,9 +59,9 @@ export const Matches = observer(() => {
         {!matchesToday ? (
           <p>На сегодня нет матчей в лиге</p>
         ) : (
-          <div>
+          <div className={styles.List__League}>
             <img
-              className={styles.List__EmblemImage}
+              className={styles.List__Emblem}
               src={league?.emblem}
               alt="Эмблема лиги"
             />
@@ -69,9 +69,9 @@ export const Matches = observer(() => {
           </div>
         )}
         {loading ? (
-          <Loader color="var(--ui-color-red)" />
+          <Loader color="deepRed.9" />
         ) : (
-          <Team
+          <MatchesToday
             matches={matchesToday}
             isReady={isReadyAverageStatistics}
             statistics={averageStatistics}

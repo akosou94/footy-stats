@@ -27,6 +27,8 @@ export const getStatistic = (
 ) => {
   const playedGames = teamStanding.TOTAL.playedGames;
   const goalsFor = teamStanding.TOTAL.goalsFor;
+  const position = teamStanding.TOTAL.position;
+
   const goalsForHome = avg(
     teamStanding.HOME?.goalsFor,
     teamStanding.HOME?.playedGames,
@@ -67,6 +69,7 @@ export const getStatistic = (
   return {
     playedGames,
     goalsFor,
+    position,
     goalsForHome,
     goalsForAway,
     leagueGoalsHome,
@@ -83,6 +86,7 @@ export const getStatistic = (
 export const mappedLabels: Record<string, string> = {
   playedGames: "Всего матчей",
   goalsFor: "Всего голов",
+  position: "Позиция",
   goalsForHome: "Среднее забитых дома",
   goalsForAway: "Среднее забитых в гостях",
   leagueGoalsHome: "Среднее голов в лиге",
