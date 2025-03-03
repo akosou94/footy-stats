@@ -1,3 +1,8 @@
+interface Tokens {
+  accessToken: string;
+  refreshToken: string;
+}
+
 export class TokenService {
   private accessTokenKey = "acKey";
   private refreshTokenKey = "reKey";
@@ -16,5 +21,10 @@ export class TokenService {
 
   setRefreshToken(token: string) {
     localStorage.setItem(this.refreshTokenKey, token);
+  }
+
+  setTokens(tokens: Tokens) {
+    this.setAccessToken(tokens.accessToken);
+    this.setRefreshToken(tokens.refreshToken);
   }
 }

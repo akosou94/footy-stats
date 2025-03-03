@@ -1,27 +1,32 @@
-import { StoreProvider } from "./store/react.tsx";
 import { Matches } from "./components/Matches";
-import { BrowserRouter, Route, Routes } from "react-router";
-import { ThemeProvider } from "./providers/ThemeProvider";
-import "@mantine/core/styles.css";
-import "@mantine/dates/styles.css";
+import { Route, Routes } from "react-router";
+
+import { useAppStore } from "./store/hooks.ts";
+import { FC, useEffect } from "react";
+import { ROUTES } from "./api/routing.constants.ts";
+import { observer } from "mobx-react-lite";
 
 const SignIn = () => {
   return <div>SignIn</div>;
 };
 
-function App() {
+const App: FC = observer(() => {
+  const appStore = useAppStore();
+
+  useEffect(() => {
+    appStore.init();
+  }, [appStore]);
+
+  if (!appStore.isReady) {
+    return <p>Loading...</p>;
+  }
+
   return (
-    <BrowserRouter>
-      <ThemeProvider>
-        <StoreProvider>
-          <Routes>
-            <Route path="/" element={<Matches />} />
-            <Route path="/signin" element={<SignIn />} />
-          </Routes>
-        </StoreProvider>
-      </ThemeProvider>
-    </BrowserRouter>
+    <Routes>
+      <Route path={ROUTES.home} element={<Matches />} />
+      <Route path={ROUTES.signIn} element={<SignIn />} />
+    </Routes>
   );
-}
+});
 
 export default App;

@@ -1,5 +1,7 @@
 @forward "variables";
 @forward "mixins";
+@import "@mantine/core/styles.css";
+@import "@mantine/dates/styles.css";
 
 * {
   box-sizing: border-box;

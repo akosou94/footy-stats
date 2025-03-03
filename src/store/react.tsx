@@ -2,7 +2,11 @@ import { createContext, FC, PropsWithChildren, useState } from "react";
 import { useNavigate } from "react-router";
 import { RootStore } from "./rootStore.ts";
 
-export const StoreContext = createContext<RootStore>(new RootStore());
+const mockedNavigate = () => {};
+
+export const StoreContext = createContext<RootStore>(
+  new RootStore(mockedNavigate),
+);
 
 export const StoreProvider: FC<PropsWithChildren> = ({ children }) => {
   const navigate = useNavigate();

@@ -5,7 +5,7 @@ import {
   observable,
   runInAction,
 } from "mobx";
-import { MatchesApi } from "../api/matchesApi";
+import { MatchesApi } from "../api";
 import { Match, MatchInfoByYear } from "../api/matchesApi/types.ts";
 import { matchesInfo } from "../components/Matches/types.ts";
 
