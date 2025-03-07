@@ -12,3 +12,7 @@ export const useMatchesStore = () => {
 export const useAppStore = () => {
   return useStore().appStore;
 };
+
+export const useAuthStore = () => {
+  return useStore().authStore;
+};

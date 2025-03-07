@@ -2,19 +2,19 @@ import { AxiosInstance } from "axios";
 import { TokenService } from "../services";
 
 export interface AuthApi {
-  signIn(_: SignInCredentials): Promise<Tokens>;
+  signIn(data: SignInCredentials): Promise<Tokens>;
 
   refresh(): Promise<Tokens>;
 }
 
 export interface SignInCredentials {
-  name: string;
-  email: string;
+  username: string;
+  password: string;
 }
 
 export interface Tokens {
-  accessToken: string;
-  refreshToken: string;
+  access_token: string;
+  refresh_token: string;
 }
 
 export class AppAuthApi implements AuthApi {
@@ -27,31 +27,30 @@ export class AppAuthApi implements AuthApi {
     private tokenService: TokenService,
   ) {}
 
-  signIn(_: SignInCredentials) {
-    return new Promise<Tokens>((resolve) => {
-      setTimeout(() => {
-        resolve({
-          accessToken: "accessToken",
-          refreshToken: "refreshToken",
-        });
-      }, 2000);
-    }).then((r) => {
-      this.tokenService.setTokens(r);
-      return r;
+  private setTokens(tokens: Tokens) {
+    this.tokenService.setTokens({
+      accessToken: tokens.access_token,
+      refreshToken: tokens.refresh_token,
+    });
+  }
+
+  signIn(data: SignInCredentials) {
+    return this.httpService.post<Tokens>("/sign_in", data).then((r) => {
+      this.setTokens(r.data);
+
+      return r.data;
     });
   }
 
   refresh() {
-    return new Promise<Tokens>((resolve, reject) => {
-      setTimeout(() => {
-        resolve({
-          accessToken: "accessToken",
-          refreshToken: "refreshToken",
-        });
-      }, 2000);
-    }).then((r) => {
-      this.tokenService.setTokens(r);
-      return r;
-    });
+    return this.httpService
+      .post<Tokens>("/refresh", {
+        refreshToken: this.tokenService.getRefreshToken(),
+      })
+      .then((r) => {
+        this.setTokens(r.data);
+
+        return r.data;
+      });
   }
 }

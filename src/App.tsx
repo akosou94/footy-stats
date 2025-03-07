@@ -3,12 +3,9 @@ import { Route, Routes } from "react-router";
 
 import { useAppStore } from "./store/hooks.ts";
 import { FC, useEffect } from "react";
-import { ROUTES } from "./api/routing.constants.ts";
 import { observer } from "mobx-react-lite";
-
-const SignIn = () => {
-  return <div>SignIn</div>;
-};
+import { ROUTES } from "./api/routing.constants.ts";
+import SignIn from "./components/SignIn/SignIn";
 
 const App: FC = observer(() => {
   const appStore = useAppStore();
