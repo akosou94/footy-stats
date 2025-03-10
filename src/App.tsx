@@ -6,6 +6,7 @@ import { FC, useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import { ROUTES } from "./api/routing.constants.ts";
 import SignIn from "./components/SignIn/SignIn";
+import { Loader } from "@mantine/core";
 
 const App: FC = observer(() => {
   const appStore = useAppStore();
@@ -15,7 +16,7 @@ const App: FC = observer(() => {
   }, [appStore]);
 
   if (!appStore.isReady) {
-    return <p>Loading...</p>;
+    return <Loader color="deepRed.9" />;
   }
 
   return (
