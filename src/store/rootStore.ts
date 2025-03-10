@@ -16,15 +16,16 @@ export class RootStore {
 
   private tokenService = new TokenService();
   private authApi = AppAuthApi.init(this.httpServiceSwagger, this.tokenService);
+  private matchesApi: MatchesApi = new AppMatchesApi(this.httpService);
+
   public navigateService: NavigateService;
   public appStore: AppStore;
-
-  private matchesApi: MatchesApi = new AppMatchesApi(this.httpService);
+  public authStore: AuthStore;
   public matchesStore = new MatchesStore(this.matchesApi);
-  public authStore = new AuthStore(this.authApi);
 
   constructor(private navigate: NavigateFunction) {
     this.navigateService = new NavigateService(this.navigate);
     this.appStore = new AppStore(this.navigateService, this.authApi);
+    this.authStore = new AuthStore(this.authApi, this.navigateService);
   }
 }
