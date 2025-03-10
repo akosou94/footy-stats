@@ -1,10 +1,18 @@
 import { AxiosInstance } from "axios";
 import { TokenService } from "../services";
 
+export interface User {
+  id: string;
+  is_active: boolean;
+  username: string;
+}
+
 export interface AuthApi {
   signIn(data: SignInCredentials): Promise<Tokens>;
 
   signUp(data: SignUpCredentials): Promise<SignUpResponse>;
+
+  me(): Promise<User>;
 
   refresh(): Promise<Tokens>;
 }
@@ -26,11 +34,7 @@ export interface Tokens {
 
 export interface SignUpResponse {
   tokens: Tokens;
-  user: {
-    id: string;
-    is_active: boolean;
-    username: string;
-  };
+  user: User;
 }
 
 export class AppAuthApi implements AuthApi {
@@ -40,7 +44,7 @@ export class AppAuthApi implements AuthApi {
 
   constructor(
     private httpService: AxiosInstance,
-    private tokenService: TokenService,
+    private tokenService: TokenService
   ) {}
 
   private setTokens(tokens: Tokens) {
@@ -78,10 +82,9 @@ export class AppAuthApi implements AuthApi {
       });
   }
 
-  // getCities() {
-  //   return this.httpService
-  //     .get("v1/cities")
-  //     .then((r) => console.log("r", r))
-  //     .finally(() => console.log("r2"));
-  // }
+  me() {
+    return this.httpService.get<User>("/me").then((r) => {
+      return r.data;
+    });
+  }
 }

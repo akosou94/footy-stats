@@ -1,5 +1,6 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import { NavigateService } from "../services";
+import { AuthStore } from "./authStore";
 
 interface AuthS {
   refresh: () => void;
@@ -11,6 +12,7 @@ export class AppStore {
   constructor(
     private navigateService: NavigateService,
     private auth: AuthS,
+    private authStore: AuthStore
   ) {
     makeAutoObservable(this);
   }
@@ -18,6 +20,7 @@ export class AppStore {
   async init() {
     try {
       await this.auth.refresh();
+      await this.authStore.me();
     } catch (e) {
       this.navigateService.toSignIn();
       throw e;

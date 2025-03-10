@@ -33,10 +33,14 @@ export class RootStore {
             Authorization: `Bearer ${tokenService.getAccessToken()}`,
           };
         },
-      },
+      }
     );
     this.authApi = AppAuthApi.init(this.httpServiceSwagger, this.tokenService);
-    this.appStore = new AppStore(this.navigateService, this.authApi);
     this.authStore = new AuthStore(this.authApi, this.navigateService);
+    this.appStore = new AppStore(
+      this.navigateService,
+      this.authApi,
+      this.authStore
+    );
   }
 }

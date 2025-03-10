@@ -2,15 +2,22 @@ import { AuthApi, SignInCredentials, SignUpCredentials } from "../api";
 import { action, makeObservable, observable, runInAction } from "mobx";
 import { NavigateService } from "../services";
 
+export interface User {
+  id: string;
+  username: string;
+}
+
 export class AuthStore {
   isLoading = false;
+  user?: User;
 
   constructor(
     private authApi: AuthApi,
-    public navigateService: NavigateService,
+    public navigateService: NavigateService
   ) {
     makeObservable(this, {
       isLoading: observable,
+      user: observable,
       signIn: action,
     });
   }
@@ -21,9 +28,11 @@ export class AuthStore {
     return this.authApi
       .signIn(data)
       .then(() => {
+        this.me();
+      })
+      .then(() => {
         this.navigateService.toHome();
       })
-      .catch(() => this.navigateService.toSignUp())
       .finally(() => {
         runInAction(() => {
           this.isLoading = false;
@@ -36,14 +45,25 @@ export class AuthStore {
 
     return this.authApi
       .signUp(data)
-      .then(() => {
+      .then((r) => {
+        runInAction(() => {
+          this.user = r.user;
+        });
+
         this.navigateService.toHome();
       })
-      .catch(() => this.navigateService.toSignUp())
       .finally(() => {
         runInAction(() => {
           this.isLoading = false;
         });
       });
+  }
+
+  me() {
+    this.authApi.me().then((user) => {
+      runInAction(() => {
+        this.user = user;
+      });
+    });
   }
 }
