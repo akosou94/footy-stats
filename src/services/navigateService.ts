@@ -11,4 +11,8 @@ export class NavigateService {
   toSignIn() {
     this.navigate(ROUTES.signIn);
   }
+
+  toSignUp() {
+    this.navigate(ROUTES.signUp);
+  }
 }
