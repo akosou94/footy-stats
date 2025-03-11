@@ -2,6 +2,11 @@
   display: flex;
   padding: 25px;
   column-gap: 50px;
+
+  @media  (width < 430px) {
+    align-items: center;
+    flex-direction: column;
+  }
 }
 
 .Filters {
