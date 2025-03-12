@@ -28,8 +28,8 @@ export interface SignUpCredentials {
 }
 
 export interface Tokens {
-  access_token: string;
-  refresh_token: string;
+  accessToken: string;
+  refreshToken: string;
 }
 
 export interface SignUpResponse {
@@ -48,14 +48,11 @@ export class AppAuthApi implements AuthApi {
   ) {}
 
   private setTokens(tokens: Tokens) {
-    this.tokenService.setTokens({
-      accessToken: tokens.access_token,
-      refreshToken: tokens.refresh_token,
-    });
+    this.tokenService.setTokens(tokens);
   }
 
   signIn(data: SignInCredentials) {
-    return this.httpService.post<Tokens>("/sign_in", data).then((r) => {
+    return this.httpService.post<Tokens>("/auth/sign-in", data).then((r) => {
       this.setTokens(r.data);
 
       return r.data;
@@ -63,16 +60,18 @@ export class AppAuthApi implements AuthApi {
   }
 
   signUp(data: SignUpCredentials) {
-    return this.httpService.post<SignUpResponse>("/sign_up", data).then((r) => {
-      this.setTokens(r.data.tokens);
+    return this.httpService
+      .post<SignUpResponse>("/auth/sign-up", data)
+      .then((r) => {
+        this.setTokens(r.data.tokens);
 
-      return r.data;
-    });
+        return r.data;
+      });
   }
 
   refresh() {
     return this.httpService
-      .post<Tokens>("/refresh", {
+      .post<Tokens>("/auth/refresh", {
         refreshToken: this.tokenService.getRefreshToken(),
       })
       .then((r) => {
@@ -83,7 +82,7 @@ export class AppAuthApi implements AuthApi {
   }
 
   me() {
-    return this.httpService.get<User>("/me").then((r) => {
+    return this.httpService.post<User>("/auth/me").then((r) => {
       return r.data;
     });
   }
