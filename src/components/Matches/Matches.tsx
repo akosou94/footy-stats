@@ -22,7 +22,7 @@ export const Matches = observer(() => {
     const disposerLeague = reaction(
       () => leagueStore.league,
       (code) => store.loadMatchesInfoByCode(code),
-      { fireImmediately: true },
+      { fireImmediately: true }
     );
 
     const disposerDates = reaction(
@@ -31,7 +31,7 @@ export const Matches = observer(() => {
         if (leagueStore.dateFrom && leagueStore.dateTo)
           store.loadMatches([leagueStore.dateFrom, leagueStore.dateTo]);
       },
-      { fireImmediately: true },
+      { fireImmediately: true }
     );
 
     return () => {

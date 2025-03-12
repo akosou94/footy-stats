@@ -47,7 +47,7 @@ const SignIn = observer(() => {
     <section className={styles.SignIn}>
       <form onSubmit={handleSubmit(onSubmit)} className={styles.SignInForm}>
         <Title order={1} mb="md">
-          Войти
+          Вход
         </Title>
 
         <TextInput
@@ -57,6 +57,7 @@ const SignIn = observer(() => {
           mb="md"
           withAsterisk
           size="md"
+          label="Имя"
         />
 
         <TextInput
@@ -67,6 +68,7 @@ const SignIn = observer(() => {
           mb="md"
           withAsterisk
           size="md"
+          label="Пароль"
         />
 
         <Group justify="center" mt="md">
@@ -76,7 +78,7 @@ const SignIn = observer(() => {
             color="deepRed.9"
             loading={store.isLoading}
           >
-            Отправить
+            Войти
           </Button>
         </Group>
       </form>
