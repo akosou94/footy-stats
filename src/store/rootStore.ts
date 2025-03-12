@@ -26,7 +26,7 @@ export class RootStore {
     this.navigateService = new NavigateService(this.navigate);
     const tokenService = this.tokenService;
     this.httpServiceSwagger = makeHttpService(
-      "https://96adab9333c7.vps.myjino.ru/go/api/",
+      "https://934275f24512.vps.myjino.ru/footy",
       {
         getTokenHeaders() {
           return {
