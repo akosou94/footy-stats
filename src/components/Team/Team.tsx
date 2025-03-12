@@ -26,7 +26,7 @@ const Team: FC<TeamProps> = (props) => {
         <p>{team.shortName}</p>
       </div>
       <div>
-        <h4>Вероятность забитых голов:</h4>
+        <h4 className={styles.Team__BlockTitle}>Вероятность забитых голов:</h4>
         {probabilities.map((item, index) => (
           <p className={styles.Team__Text}>
             {index} - {item}%
@@ -34,7 +34,7 @@ const Team: FC<TeamProps> = (props) => {
         ))}
       </div>
       <div>
-        <h4>Статистика команды:</h4>
+        <h4 className={styles.Team__BlockTitle}>Статистика команды:</h4>
         <ul>
           {Object.entries(statistics[team.id]).map(([key, value]) => (
             <li key={key} className={styles.Team__Text}>
