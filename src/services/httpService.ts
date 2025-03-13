@@ -32,3 +32,11 @@ export const makeHttpService = (
 
   return instance;
 };
+
+export const makeHttpServiceMatches = (baseURL: string) => {
+  const instance = axios.create({
+    baseURL,
+  });
+
+  return instance;
+};

@@ -44,7 +44,7 @@ export class AppAuthApi implements AuthApi {
 
   constructor(
     private httpService: AxiosInstance,
-    private tokenService: TokenService
+    private tokenService: TokenService,
   ) {}
 
   private setTokens(tokens: Tokens) {
