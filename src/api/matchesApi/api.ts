@@ -11,33 +11,36 @@ export class AppMatchesApi implements MatchesApi {
 
   constructor(private httpService: AxiosInstance) {}
 
-  getMatches(value) {
+  getMatches(value: Date[]): Promise<{ matches: Match[] }> {
+    const params: Record<string, string | null> = {};
+
+    if (value[0]) {
+      params.dateFrom = value[0].toISOString().split("T")[0];
+    }
+    if (value[1]) {
+      params.dateTo = value[1].toISOString().split("T")[0];
+    }
+
     return this.httpService
-      .get("/v4/matches", {
-        params: {
-          dateFrom: value[0] ? value[0].toISOString().split("T")[0] : null,
-          dateTo: value[1] ? value[1].toISOString().split("T")[0] : null,
-          permission: "TIER_THREE",
-        },
-      })
-      .then((r) => r.data);
+      .get("/matches", { params })
+      .then((r) => r.data)
+      .catch((error) => {
+        console.error("Error fetching matches:", error);
+        throw error;
+      });
   }
 
-  getMatchesDataByYear(code: string = "PL") {
+  getMatchesDataByYear(): Promise<MatchInfoByYear> {
     return this.httpService
-      .get(`/v4/competitions/${code}/standings`, {
+      .get(`/matches/by-year`, {
         params: {
           season: this.season,
         },
       })
-      .then((r) => r.data);
+      .then((r) => r.data)
+      .catch((error) => {
+        console.error("Error fetching matches data by year:", error);
+        throw error;
+      });
   }
 }
-
-// export function makeMatchesApi(httpService: AxiosInstance): MatchesApi {
-// 	return {
-// 		getMatches: () => {
-// 			return httpService.get('/v4/matches').then(r => r.data)
-// 		}
-// 	}
-// }
