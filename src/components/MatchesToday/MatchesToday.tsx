@@ -38,34 +38,32 @@ const MatchesToday: FC<TeamProps> = (props) => {
             <List.Item key={id}>
               <div className={styles.Match}>
                 <Team
-                  key={id}
                   title={"Хозяева"}
                   team={homeTeam}
                   probabilities={getProbabilities(
-                    statistics[homeTeam.id].powerAttack,
-                    statistics[awayTeam.id].powerDefenceAway,
-                    statistics[homeTeam.id].leagueGoalsHome,
+                    statistics[homeTeam.id]?.powerAttack,
+                    statistics[awayTeam.id]?.powerDefenceAway,
+                    statistics[homeTeam.id]?.leagueGoalsHome,
                   )}
                   rating={getAttackRating(
-                    statistics[homeTeam.id].powerAttack,
-                    statistics[awayTeam.id].powerDefenceAway,
-                    statistics[homeTeam.id].leagueGoalsHome,
+                    statistics[homeTeam.id]?.powerAttack,
+                    statistics[awayTeam.id]?.powerDefenceAway,
+                    statistics[homeTeam.id]?.leagueGoalsHome,
                   )}
                   statistics={statistics}
                 />
                 <Team
-                  key={id}
                   title={"Гости"}
                   team={awayTeam}
                   probabilities={getProbabilities(
-                    statistics[homeTeam.id].powerDefence,
-                    statistics[awayTeam.id].powerAttackAway,
-                    statistics[awayTeam.id].leagueGoalsHome,
+                    statistics[homeTeam.id]?.powerDefence,
+                    statistics[awayTeam.id]?.powerAttackAway,
+                    statistics[awayTeam.id]?.leagueGoalsHome,
                   )}
                   rating={getAttackRating(
-                    statistics[homeTeam.id].powerDefence,
-                    statistics[awayTeam.id].powerAttackAway,
-                    statistics[awayTeam.id].leagueGoalsHome,
+                    statistics[homeTeam.id]?.powerDefence,
+                    statistics[awayTeam.id]?.powerAttackAway,
+                    statistics[awayTeam.id]?.leagueGoalsHome,
                   )}
                   statistics={statistics}
                 />
