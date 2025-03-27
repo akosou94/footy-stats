@@ -21,8 +21,10 @@ export const Matches = observer(() => {
   useEffect(() => {
     const disposerLeague = reaction(
       () => leagueStore.league,
-      (code) => store.loadMatchesInfoByCode(code),
-      { fireImmediately: true }
+      (code) => {
+        store.loadMatchesInfoByCode(code);
+      },
+      { fireImmediately: true },
     );
 
     const disposerDates = reaction(
@@ -31,7 +33,7 @@ export const Matches = observer(() => {
         if (leagueStore.dateFrom && leagueStore.dateTo)
           store.loadMatches([leagueStore.dateFrom, leagueStore.dateTo]);
       },
-      { fireImmediately: true }
+      { fireImmediately: true },
     );
 
     return () => {

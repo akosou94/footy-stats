@@ -23,6 +23,8 @@ export class RootStore {
     const tokenService = this.tokenService;
     this.httpService = makeHttpService(
       "https://934275f24512.vps.myjino.ru/footy",
+      // "http://localhost:3000",
+
       {
         getTokenHeaders() {
           return {

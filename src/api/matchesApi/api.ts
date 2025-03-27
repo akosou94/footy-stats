@@ -7,8 +7,6 @@ export interface MatchesApi {
 }
 
 export class AppMatchesApi implements MatchesApi {
-  season = "2024";
-
   constructor(private httpService: AxiosInstance) {}
 
   getMatches(value: Date[]): Promise<{ matches: Match[] }> {
@@ -30,11 +28,11 @@ export class AppMatchesApi implements MatchesApi {
       });
   }
 
-  getMatchesDataByYear(): Promise<MatchInfoByYear> {
+  getMatchesDataByYear(code: string): Promise<MatchInfoByYear> {
     return this.httpService
       .get(`/matches/by-year`, {
         params: {
-          season: this.season,
+          code,
         },
       })
       .then((r) => r.data)

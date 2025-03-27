@@ -45,18 +45,27 @@ export class AppAuthApi implements AuthApi {
   constructor(
     private httpService: AxiosInstance,
     private tokenService: TokenService,
-  ) {}
+  ) {
+    this.setTokens = this.setTokens.bind(this);
+  }
 
   private setTokens(tokens: Tokens) {
     this.tokenService.setTokens(tokens);
+
+    return tokens;
   }
 
-  signIn(data: SignInCredentials) {
-    return this.httpService.post<Tokens>("/auth/sign-in", data).then((r) => {
-      this.setTokens(r.data);
+  // private setAnotherTokens = (tokens: Tokens) => {
+  //   this.tokenService.setTokens(tokens);
+  //
+  //   return tokens;
+  // };
 
-      return r.data;
-    });
+  signIn(data: SignInCredentials) {
+    return this.httpService
+      .post<Tokens>("/auth/sign-in", data)
+      .then((r) => r.data)
+      .then(this.setTokens);
   }
 
   signUp(data: SignUpCredentials) {
@@ -74,11 +83,8 @@ export class AppAuthApi implements AuthApi {
       .post<Tokens>("/auth/refresh", {
         refreshToken: this.tokenService.getRefreshToken(),
       })
-      .then((r) => {
-        this.setTokens(r.data);
-
-        return r.data;
-      });
+      .then((r) => r.data)
+      .then(this.setTokens);
   }
 
   me() {
