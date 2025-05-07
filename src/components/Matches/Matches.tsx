@@ -8,6 +8,7 @@ import { options } from "./constants";
 import { LeagueStore } from "./LeagueStore";
 import { DatePicker } from "@mantine/dates";
 import MatchesToday from "../MatchesToday/MatchesToday.tsx";
+import "dayjs/locale/ru";
 
 export const Matches = observer(() => {
   const store = useMatchesStore();
@@ -50,26 +51,34 @@ export const Matches = observer(() => {
           onChange={leagueStore.setLeague}
           radius="md"
           data={options}
+          withItemsBorders={false}
+          transitionDuration={500}
+          transitionTimingFunction="linear"
+          styles={{
+            root: {
+              flexWrap: "wrap",
+            },
+          }}
         />
         <DatePicker
           type="range"
           value={[leagueStore.dateFrom, leagueStore.dateTo]}
           onChange={leagueStore.setDates}
+          locale={"ru"}
         />
       </div>
-      <List className={styles.List}>
-        {!matchesToday ? (
-          <p>На сегодня нет матчей в лиге</p>
-        ) : (
-          <div className={styles.List__League}>
-            <img
-              className={styles.List__Emblem}
-              src={league?.emblem}
-              alt="Эмблема лиги"
-            />
-            <h2 className={styles.List__MatchDay}>{league?.matchDay}-й тур</h2>
-          </div>
-        )}
+      <List
+        className={styles.List}
+        styles={{
+          root: {
+            display: "flex",
+            flex: "1",
+            flexWrap: "wrap",
+            gap: "10px",
+          },
+        }}
+      >
+        {!matchesToday && <p>На сегодня нет матчей в лиге</p>}
         {loading ? (
           <Loader color="deepRed.9" />
         ) : (

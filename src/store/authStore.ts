@@ -13,7 +13,7 @@ export class AuthStore {
 
   constructor(
     private authApi: AuthApi,
-    public navigateService: NavigateService
+    public navigateService: NavigateService,
   ) {
     makeObservable(this, {
       isLoading: observable,
@@ -32,6 +32,9 @@ export class AuthStore {
       })
       .then(() => {
         this.navigateService.toHome();
+      })
+      .catch(() => {
+        this.navigateService.toSignUp();
       })
       .finally(() => {
         runInAction(() => {

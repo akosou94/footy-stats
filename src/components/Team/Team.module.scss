@@ -1,4 +1,6 @@
 .Team {
+  width: 50%;
+
   &__Title {
     display: flex;
     flex-direction: column;
@@ -23,4 +25,27 @@
   &__BlockTitle {
     font-size: 14px;
   }
+}
+
+details summary {
+  position: relative;
+  list-style: none;
+  padding-left: 25px;
+  padding-top: 15px;
+}
+
+details summary::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  background-image: url("/free-icon-football.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  background-color: #ffffff;
+  border-radius: 50%;
 }
