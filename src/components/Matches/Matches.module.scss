@@ -1,7 +1,7 @@
 .Matches {
   display: flex;
   padding: 25px;
-  column-gap: 50px;
+  column-gap: 15px;
 
   @media (width < 768px) {
     align-items: center;
@@ -11,28 +11,26 @@
 
 .Filters {
   position: sticky;
-}
-
-.List {
   display: flex;
   flex-direction: column;
   align-items: center;
   row-gap: 20px;
-  width: 100%;
+  width: 20%;
+  height: fit-content;
+  outline: 2px solid #3b3b3b;
+  padding: 15px;
+  border-radius: 12px;
 
+  @media (width < 1280px) {
+    margin-bottom: 20px;
+    width: 100%;
+  }
+}
+
+.List {
   &__League {
     width: 100%;
     border-radius: 20px;
     border: 1px solid rgba(255, 255, 255, 0.2);
-  }
-
-  &__MatchDay {
-    text-align: center;
-  }
-
-  &__Emblem {
-    width: 100%;
-    height: 120px;
-    object-fit: contain;
   }
 }

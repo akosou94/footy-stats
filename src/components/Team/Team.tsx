@@ -33,17 +33,21 @@ const Team: FC<TeamProps> = (props) => {
           </p>
         ))}
       </div>
-      <div>
-        <h4 className={styles.Team__BlockTitle}>Статистика команды:</h4>
+      <details>
+        <summary>
+          <h4 className={styles.Team__BlockTitle}>
+            Подробная статистика команды:
+          </h4>
+        </summary>
         <ul>
           {Object.entries(statistics[team.id]).map(([key, value]) => (
             <li key={key} className={styles.Team__Text}>
               {mappedLabels[key]} - {value as string}
             </li>
           ))}
+          <p className={styles.Team__Text}>Рейтинг атаки - {rating}</p>
         </ul>
-        <p className={styles.Team__Text}>Рейтинг атаки - {rating}</p>
-      </div>
+      </details>
     </div>
   );
 };
